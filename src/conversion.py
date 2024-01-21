@@ -13,7 +13,7 @@ val_step = 300  # The number of iterations for determining algorithm convergence
                 # is smaller than a pre-set threshold for val_step itertions, the algorithm converges.
 
 # Import the example data and linearly scale each feature so that its minimum and maximum values are 0 and 1, respectively.
-data = pd.read_csv('../Data/Example_Gene_Expression_Tabular_Data.txt', low_memory=False, sep='\t', engine='c',
+data = pd.read_csv('../data/Example_Gene_Expression_Tabular_Data.txt', low_memory=False, sep='\t', engine='c',
                    na_values=['na', '-', ''], header=0, index_col=0)
 # Select features with large variations across samples
 id = select_features_by_variation(data, variation_measure='var', num=num)

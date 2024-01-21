@@ -3,7 +3,7 @@ import _pickle as cp
 import shutil
 import os
 
-from utils import get_model_parameter, load_example_data, get_data_for_cross_validation, \
+from model import get_model_parameter, load_example_data, get_data_for_cross_validation, \
     CNN2D_Regression_Analysis, CNN2D_Classification_Analysis
 
 
@@ -32,8 +32,8 @@ if os.path.exists(result_dir):
 os.makedirs(result_dir)
 
 # Load network parameters
-para = get_model_parameter('../Data/Example_Model_Parameters/FCNN_Regressor.txt')
-subnetwork_para = get_model_parameter('../Data/Example_Model_Parameters/CNN2D_SubNetwork.txt')
+para = get_model_parameter('../data/Example_Model_Parameters/FCNN_Regressor.txt')
+subnetwork_para = get_model_parameter('../data/Example_Model_Parameters/CNN2D_SubNetwork.txt')
 para.update(subnetwork_para)
 
 # Generate data for cross-validation analysis
@@ -77,8 +77,8 @@ res.iloc[id_neg, 2] = 0
 res.AUC = res.AUC.astype('int64')
 
 # Load network parameters
-para = get_model_parameter('../Data/Example_Model_Parameters/FCNN_Classifier.txt')
-subnetwork_para = get_model_parameter('../Data/Example_Model_Parameters/CNN2D_SubNetwork.txt')
+para = get_model_parameter('../data/Example_Model_Parameters/FCNN_Classifier.txt')
+subnetwork_para = get_model_parameter('../data/Example_Model_Parameters/CNN2D_SubNetwork.txt')
 para.update(subnetwork_para)
 
 # Generate data for cross-validation analysis

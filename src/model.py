@@ -27,17 +27,17 @@ def ID_mapping(l1, l2):
 
 
 def load_example_data():
-    res = pd.read_csv('../Data/Example_Drug_Response_Data.txt', sep='\t', engine='c',
+    res = pd.read_csv('../data/Example_Drug_Response_Data.txt', sep='\t', engine='c',
                       na_values=['na', '-', ''], header=0, index_col=None)
 
-    files = os.listdir('../Data/Example_Drug_Descriptor_Image_Data/')
+    files = os.listdir('../data/Example_Drug_Descriptor_Image_Data/')
     image = np.empty((len(files), 50, 50, 1))
     sample = []
     id = []
     for i in range(len(files)):
         if files[i].split('.')[1] == 'txt' and files[i].split('_')[0] == 'Drug':
             id.append(i)
-            data = pd.read_csv('../Data/Example_Drug_Descriptor_Image_Data/' + files[i], sep='\t', engine='c',
+            data = pd.read_csv('../data/Example_Drug_Descriptor_Image_Data/' + files[i], sep='\t', engine='c',
                                na_values=['na', '-', ''], header=None, index_col=None)
             image[i, :, :, 0] = data.values
             sample.append(files[i].split('.txt')[0])
@@ -46,14 +46,14 @@ def load_example_data():
     drug['data'] = image
     drug['sample'] = sample
 
-    files = os.listdir('../Data/Example_Gene_Expression_Image_Data/')
+    files = os.listdir('../data/Example_Gene_Expression_Image_Data/')
     image = np.empty((len(files), 50, 50, 1))
     sample = []
     id = []
     for i in range(len(files)):
         if files[i].split('.')[1] == 'txt' and files[i].split('_')[0] == 'CCL':
             id.append(i)
-            data = pd.read_csv('../Data/Example_Gene_Expression_Image_Data/' + files[i], sep='\t', engine='c',
+            data = pd.read_csv('../data/Example_Gene_Expression_Image_Data/' + files[i], sep='\t', engine='c',
                                na_values=['na', '-', ''], header=None, index_col=None)
             image[i, :, :, 0] = data.values
             sample.append(files[i].split('.txt')[0])

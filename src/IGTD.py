@@ -352,16 +352,16 @@ def IGTD_absolute_error(source, target, max_step=1000, switch_t=0, val_step=50, 
 
         pre_err = err
 
-    index_record = index_record[:len(err_record), :].astype(np.int)
+    index_record = index_record[:len(err_record), :].astype(int)
     if save_folder is not None:
         pd.DataFrame(index_record).to_csv(save_folder + '/' + file_name + '_index.txt', header=False, index=False,
-            sep='\t', line_terminator='\r\n')
+            sep='\t', lineterminator='\r\n')
         pd.DataFrame(np.transpose(np.vstack((err_record, np.array(range(s + 2))))),
             columns=['error', 'steps']).to_csv(save_folder + '/' + file_name + '_error_and_step.txt',
-            header=True, index=False, sep='\t', line_terminator='\r\n')
+            header=True, index=False, sep='\t', lineterminator='\r\n')
         pd.DataFrame(np.transpose(np.vstack((err_record, run_time))), columns=['error', 'run_time']).to_csv(
             save_folder + '/' + file_name + '_error_and_time.txt', header=True, index=False, sep='\t',
-            line_terminator='\r\n')
+            lineterminator='\r\n')
 
     return index_record, err_record, run_time
 
@@ -576,7 +576,7 @@ def generate_image_data(data, index, num_row, num_column, coord, image_folder=No
     '''
 
     if isinstance(data, pd.DataFrame):
-        samples = data.index.map(np.str)
+        samples = data.index.map(str)
         data = data.values
     else:
         samples = [str(i) for i in range(data.shape[0])]
@@ -608,7 +608,7 @@ def generate_image_data(data, index, num_row, num_column, coord, image_folder=No
         if image_folder is not None:
             fig = plt.figure()
             plt.imshow(data_i, cmap='gray', vmin=0, vmax=255)
-            plt.axis('scaled')
+            plt.axis('off')
             plt.savefig(fname=image_folder + '/' + file_name + '_' + samples[i] + '_image.png', bbox_inches='tight',
                         pad_inches=0)
             plt.close(fig)
