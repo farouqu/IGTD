@@ -3,7 +3,7 @@ import _pickle as cp
 import shutil
 import os
 
-from Prediction_Modeling_Functions import get_model_parameter, load_example_data, get_data_for_cross_validation, \
+from utils import get_model_parameter, load_example_data, get_data_for_cross_validation, \
     CNN2D_Regression_Analysis, CNN2D_Classification_Analysis
 
 

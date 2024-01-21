@@ -1,6 +1,6 @@
 import pandas as pd
 import os
-from IGTD_Functions import min_max_transform, table_to_image, select_features_by_variation
+from IGTD import min_max_transform, table_to_image, select_features_by_variation
 
 
 
