@@ -244,7 +244,82 @@ class CNN2D_Regressor():
         print(model.summary())
         self.model = model
 
+class CNN2D():
+    # This is the class for 2-dimensional convolutional neural network regressors (CNN2D_Regressor).
+    # The model can accept more than one sizes of filter, such [3, 5].
+    def __init__(self, params, input_data_dim, num_class, dropout):
+        # params: dict, CNN2D model parameters
+        # input_data_dim: a list. Each element of the list includes two positive integers, the dimension of input images
+        # dropout: dropout rate, all layers use the same dropout rate
 
+        self.params = params
+        self.dropout = dropout
+        self.num_class = num_class
+        self.input_data_dim = input_data_dim
+
+        num_kernel_size = len(self.params['kernel_size'])
+        num_conv_layer = []
+        for i in range(num_kernel_size):
+            num_conv_layer.append(len(self.params['num_kernel'][i]))
+        num_dense_layer = len(self.params['network_layers'])
+
+        input = []
+        input2List = []
+        num_input = len(self.input_data_dim)
+        for input_id in range(num_input):
+            in_id = Input(shape=(self.input_data_dim[input_id][0], self.input_data_dim[input_id][1], 3),
+                          name='Input_' + str(input_id))
+            input.append(in_id)
+            for j in range(num_kernel_size):
+                min_row_size = self.params['pool_size'][j][0] * 2 + self.params['kernel_size'][j][0] - 1
+                min_col_size = self.params['pool_size'][j][1] * 2 + self.params['kernel_size'][j][1] - 1
+                for i in range(num_conv_layer[j]):
+                    if i == 0:
+                        d = Conv2D(filters=self.params['num_kernel'][j][i], kernel_size=self.params['kernel_size'][j],
+                                   strides=self.params['strides'][j], padding='valid', data_format='channels_last',
+                                   name='Conv2D_' + str(i) + '_Kernel_' + str(j) + '_Input_' + str(input_id))(in_id)
+                    else:
+                        d = Conv2D(filters=self.params['num_kernel'][j][i], kernel_size=self.params['kernel_size'][j],
+                                   strides=self.params['strides'][j], padding='valid', data_format='channels_last',
+                                   name='Conv2D_' + str(i) + '_Kernel_' + str(j) + '_Input_' + str(input_id))(d)
+                    d = BatchNormalization(axis=-1, name='BatchNorm_' + str(i) + '_Kernel_' + str(j) + '_Input_'
+                                                         + str(input_id))(inputs=d)
+                    if self.params['subnetwork_activation'] == 'relu':
+                        d = ReLU(name='ReLU_' + str(i) + '_Kernel_' + str(j) + '_Input_' + str(input_id))(d)
+                    else:
+                        raise TypeError("Activation is not ReLU in subnetwork.")
+                    d = MaxPooling2D(pool_size=self.params['pool_size'][j], name='MaxPooling_' + str(i) + '_Kernel_'
+                        + str(j) + '_Input_' + str(input_id), padding='same')(d)
+                    dim = np.array(d.shape.as_list())
+                    flag_0 = dim[1] < min_row_size
+                    flag_1 = dim[2] < min_col_size
+                    if flag_0 or flag_1:
+                        break
+                d = Flatten()(d)
+                input2List.append(d)
+
+        if num_input > 1:
+            d = concatenate(input2List, name='concatenation')
+        for i in range(num_dense_layer):
+            if self.params['activation'] == 'selu':
+                d = Dense(self.params['network_layers'][i], activation=self.params['activation'], name='Dense_' + str(i),
+                          kernel_initializer='lecun_normal')(d)
+            else:
+                d = Dense(self.params['network_layers'][i], activation=self.params['activation'], name='Dense_' + str(i))(d)
+            if i != num_dense_layer - 1:
+                if self.params['activation'] == 'selu':
+                    d = AlphaDropout(self.dropout, name='Dropout_Dense_' + str(i))(d)
+                else:
+                    d = Dropout(self.dropout, name='Dropout_Dense_' + str(i))(d)
+
+        output = Dense(1, activation='sigmoid', name='output')(d)
+        if num_input > 1:
+            model = Model(inputs=input, outputs=output)
+        else:
+            model = Model(inputs=input[0], outputs=output)
+        model.compile(loss="binary_crossentropy", optimizer="adam", metrics=["accuracy"])
+        print(model.summary())
+        self.model = model
 
 class CNN2D_Classifier():
     # This is the class for 2-dimensional convolutional neural network regressors (CNN2D_Regressor).

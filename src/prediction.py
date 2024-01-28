@@ -50,7 +50,7 @@ result['winningModel'] = winningModel   # Model with the minimum validation loss
 result['batch_size'] = batch_size       # Batch size used in model training
 
 # Save prediction performance and all data and results
-perf.to_csv(result_dir + '/Prediction_Performance.txt', header=True, index=True, sep='\t', line_terminator='\r\n')
+perf.to_csv(result_dir + '/Prediction_Performance.txt', header=True, index=True, sep='\t', lineterminator='\r\n')
 output = open(result_dir + '/Result.pkl', 'wb')
 cp.dump(res, output)
 cp.dump(ccl, output)
@@ -95,7 +95,7 @@ result['winningModel'] = winningModel   # Model with the minimum validation loss
 result['batch_size'] = batch_size       # Batch size used in model training
 
 # Save prediction performance and all data and results
-perf.to_csv(result_dir + '/Prediction_Performance.txt', header=True, index=True, sep='\t', line_terminator='\r\n')
+perf.to_csv(result_dir + '/Prediction_Performance.txt', header=True, index=True, sep='\t', lineterminator='\r\n')
 output = open(result_dir + '/Result.pkl', 'wb')
 cp.dump(res, output)
 cp.dump(ccl, output)
